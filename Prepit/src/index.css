@@ -11,3 +11,12 @@ body {
 .home-btn {
   border: solid 2px;
 }
+
+.faq-card {
+  height: 25rem;
+  width: 65rem;
+  border: solid 1px rgb(122 173 71 / var(--tw-bg-opacity, 1));
+  border-radius: 0.75rem;
+  border: solid 1px #999999;
+  border-color: rgba(193, 192, 192, 0.207);
+}
