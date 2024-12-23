@@ -20,10 +20,13 @@ export default function AI() {
     formData.append("file", file);
 
     try {
-      const response = await fetch("http://localhost:8000/api/ai/file", {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetch(
+        "https://prepit-backend.vercel.app/api/ai/file",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       const data = await response.json();
       setResponse(data.msg);
@@ -67,17 +70,22 @@ export default function AI() {
 
       {response && (
         <div className="mt-8 mb-8 w-full max-w-2xl p-6 border-2 border-blue-600 rounded-lg bg-white shadow-lg">
-          {response.split('\n\n').map((qa, index) => {
-            const [question, answer] = qa.split('\n');
+          {response.split("\n\n").map((qa, index) => {
+            const [question, answer] = qa.split("\n");
             if (!question || !answer) return null;
-            
+
             return (
-              <div key={index} className={`${index > 0 ? 'mt-6 pt-6 border-t border-blue-200' : ''}`}>
+              <div
+                key={index}
+                className={`${
+                  index > 0 ? "mt-6 pt-6 border-t border-blue-200" : ""
+                }`}
+              >
                 <h3 className="text-lg font-semibold text-blue-800">
-                  {question.replace('Q' + (index + 1) + ': ', '')}
+                  {question.replace("Q" + (index + 1) + ": ", "")}
                 </h3>
                 <p className="mt-2 text-gray-700">
-                  {answer.replace('A' + (index + 1) + ': ', '')}
+                  {answer.replace("A" + (index + 1) + ": ", "")}
                 </p>
               </div>
             );
