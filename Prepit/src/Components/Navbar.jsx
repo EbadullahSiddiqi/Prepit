@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Menu, X } from "lucide-react";
 import logo from "../assets/prepit.webp";
+import { Link } from "react-router-dom";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -21,10 +22,10 @@ export default function Navbar() {
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center gap-16 text-white text-lg font-semibold">
-            <a href="#" className="hover:text-blue-200 transition-colors">Home</a>
-            <a href="#" className="hover:text-blue-200 transition-colors">About</a>
-            <a href="#" className="hover:text-blue-200 transition-colors">Contact</a>
-            <a href="#" className="hover:text-blue-200 transition-colors">Wishlist</a>
+            <Link to="/" className="hover:text-blue-200 transition-colors">Home</Link>
+            <Link to="/about" className="hover:text-blue-200 transition-colors">About</Link>
+            <Link to="/contact" className="hover:text-blue-200 transition-colors">Contact</Link>
+            <Link to="/ai" className="hover:text-blue-200 transition-colors">Wishlist</Link>
           </div>
 
           {/* Mobile Menu Button */}
