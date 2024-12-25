@@ -3,9 +3,7 @@ import { PDFDocument } from "pdf-lib";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import Tesseract from "tesseract.js";
 
-
 export default function AI() {
-
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState(null);
@@ -22,31 +20,25 @@ export default function AI() {
     setError(null);
 
     try {
-      // Read the file
       const fileBuffer = await file.arrayBuffer();
       let extractedText = "";
 
-      // Handle PDF files
       if (file.type === "application/pdf") {
         try {
           const pdfDoc = await PDFDocument.load(fileBuffer);
           const pages = pdfDoc.getPages();
           for (const page of pages) {
-            const textContent = await page.getTextContent();
-            extractedText +=
-              textContent.items.map((item) => item.str).join(" ") + "\n";
+            const text = await page.getText();
+            extractedText += text + "\n";
           }
         } catch (parseError) {
           console.warn("PDF parsing failed, falling back to OCR");
-          // Perform OCR for PDF
           const result = await Tesseract.recognize(file, "eng", {
             logger: (m) => console.log(m),
           });
           extractedText = result.data.text;
         }
-      }
-      // Handle image files
-      else if (file.type.startsWith("image/")) {
+      } else if (file.type.startsWith("image/")) {
         const result = await Tesseract.recognize(file, "eng", {
           logger: (m) => console.log(m),
         });
@@ -55,7 +47,6 @@ export default function AI() {
         throw new Error("Unsupported file type");
       }
 
-      // Clean the extracted text
       const cleanedText = extractedText
         .replace(/taleemcity\.com/g, "")
         .replace(/\s+/g, " ")
@@ -65,11 +56,9 @@ export default function AI() {
         throw new Error("No meaningful content found in file");
       }
 
-      // Initialize Gemini AI
       const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
       const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-      // Prepare the prompt
       const prompt = `
         Extract text from this file and create study questions and answers from it. 
         Format them as:
@@ -83,7 +72,6 @@ export default function AI() {
         Here is the extracted text: ${cleanedText}
       `;
 
-      // Generate response using AI
       const result = await model.generateContent([prompt]);
       const responseText = result.response.text();
 
