@@ -1,25 +1,24 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
   build: {
     rollupOptions: {
-      external: ['pdf-lib', 'tesseract.js', '@google/generative-ai'],
+      external: ["pdf-lib", "tesseract.js", "@google/generative-ai"],
       output: {
         globals: {
-          'pdf-lib': 'PDFLib',
-          'tesseract.js': 'Tesseract',
-          '@google/generative-ai': 'GoogleGenerativeAI'
-        }
-      }
-    }
+          "tesseract.js": "Tesseract",
+          "@google/generative-ai": "GoogleGenerativeAI",
+        },
+      },
+    },
   },
   optimizeDeps: {
-    include: ['pdf-lib', 'tesseract.js', '@google/generative-ai']
+    include: ["pdf-lib", "tesseract.js", "@google/generative-ai"],
   },
   define: {
-    'process.env': {}
-  }
-})
+    "process.env": {},
+  },
+});
