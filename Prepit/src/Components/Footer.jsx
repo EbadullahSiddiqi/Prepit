@@ -9,9 +9,9 @@ export default function Footer() {
         <div className="space-y-4">
           <h3 className="text-xl font-bold">About Prepit AI</h3>
           <p className="text-sm">
-            Founded by Ebadullah Siddiqi, Prepit AI helps students ace their
-            exams by turning their notes into smart study materials using
-            artificial intelligence.
+            Founded by <strong>Ebadullah Siddiqi</strong>, Prepit AI helps
+            students ace their exams by turning their notes into smart study
+            materials using artificial intelligence.
           </p>
         </div>
 
@@ -76,7 +76,9 @@ export default function Footer() {
       {/* Copyright */}
       <div className="mt-8 pt-8 border-t border-blue-400 text-center text-sm">
         <p>© {new Date().getFullYear()} Prepit AI. All rights reserved.</p>
-        <p className="mt-2">Developed with ❤️ by Ebadullah Siddiqi</p>
+        <p className="mt-2">
+          Developed with ❤️ by <strong>Ebadullah Siddiqi</strong>
+        </p>
       </div>
     </footer>
   );

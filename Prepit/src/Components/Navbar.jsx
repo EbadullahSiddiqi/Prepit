@@ -25,7 +25,7 @@ export default function Navbar() {
             <Link to="/" className="hover:text-blue-200 transition-colors">Home</Link>
             <Link to="/about" className="hover:text-blue-200 transition-colors">About</Link>
             <Link to="/contact" className="hover:text-blue-200 transition-colors">Contact</Link>
-            <Link to="/ai" className="hover:text-blue-200 transition-colors">Wishlist</Link>
+            <Link to="/ai" className="hover:text-blue-200 transition-colors">Use Now!</Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -50,7 +50,7 @@ export default function Navbar() {
               <a href="#" className="hover:text-blue-200 transition-colors">Home</a>
               <a href="#" className="hover:text-blue-200 transition-colors">About</a>
               <a href="#" className="hover:text-blue-200 transition-colors">Contact</a>
-              <a href="#" className="hover:text-blue-200 transition-colors">Wishlist</a>
+              <a href="#" className="hover:text-blue-200 transition-colors">Use Now!</a>
             </div>
           </div>
         )}
