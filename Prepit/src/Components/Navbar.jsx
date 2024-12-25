@@ -47,10 +47,10 @@ export default function Navbar() {
         {isMenuOpen && (
           <div className="md:hidden">
             <div className="flex flex-col gap-4 pt-4 text-white text-lg font-semibold">
-              <a href="#" className="hover:text-blue-200 transition-colors">Home</a>
-              <a href="#" className="hover:text-blue-200 transition-colors">About</a>
-              <a href="#" className="hover:text-blue-200 transition-colors">Contact</a>
-              <a href="#" className="hover:text-blue-200 transition-colors">Use Now!</a>
+              <Link to="/" className="hover:text-blue-200 transition-colors">Home</Link>
+              <Link to="/about" className="hover:text-blue-200 transition-colors">About</Link>
+              <Link to="/contact" className="hover:text-blue-200 transition-colors">Contact</Link>
+              <Link to="/ai" className="hover:text-blue-200 transition-colors">Use Now!</Link>
             </div>
           </div>
         )}
