@@ -15,8 +15,8 @@ export default function AI() {
       return;
     }
 
-    if (!file.type.startsWith("image/")) {
-      setError("Please upload an image file");
+    if (!file.type.startsWith("image/") && file.type !== "application/pdf") {
+      setError("Please upload an image or PDF file");
       return;
     }
 
@@ -24,46 +24,42 @@ export default function AI() {
     setError(null);
 
     try {
-      // Perform OCR on the image
-      const ocrResult = await Tesseract.recognize(file, "eng", {
-        logger: (m) => console.log(m),
+      const formData = new FormData();
+      formData.append('file', file, file.name);
+
+      console.log('File details:', {
+        name: file.name,
+        type: file.type,
+        size: file.size
+      });
+      
+      console.log('FormData entries:', [...formData.entries()].map(entry => ({
+        fieldName: entry[0],
+        fileName: entry[1].name
+      })));
+
+      const response = await fetch('http://localhost:8000/ai', {
+        method: 'POST',
+        body: formData,
       });
 
-      const extractedText = ocrResult.data.text;
+      console.log('Response status:', response.status);
+      const responseText = await response.text();
+      console.log('Raw response:', responseText);
 
-      // Clean the extracted text
-      const cleanedText = extractedText
-        .replace(/taleemcity\.com/g, "")
-        .replace(/\s+/g, " ")
-        .trim();
-
-      if (!cleanedText) {
-        throw new Error("No meaningful content found in image");
+      if (!response.ok) {
+        let errorMessage;
+        try {
+          const errorData = JSON.parse(responseText);
+          errorMessage = errorData.error || 'Server responded with an error';
+        } catch {
+          errorMessage = responseText || 'Server responded with an error';
+        }
+        throw new Error(errorMessage);
       }
 
-      // Initialize Gemini AI
-      const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
-      // Prepare the prompt
-      const prompt = `
-        Extract text from this image and create study questions and answers from it. 
-        Format them as:
-
-        Q1: [Question]
-        A1: [Answer]
-
-        Q2: [Question]
-        A2: [Answer]
-
-        Here is the extracted text: ${cleanedText}
-      `;
-
-      // Generate response using AI
-      const result = await model.generateContent(prompt);
-      const responseText = await result.response.text();
-
-      setResponse(responseText);
+      const data = JSON.parse(responseText);
+      setResponse(data.msg);
     } catch (err) {
       console.error("Error:", err);
       setError(err.message || "Something went wrong. Please try again.");

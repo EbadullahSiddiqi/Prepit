@@ -8,10 +8,10 @@ export default defineConfig({
     rollupOptions: {
       external: ["pdf-lib", "tesseract.js", "@google/generative-ai"],
       output: {
-        // globals: {
-        //   "tesseract.js": "Tesseract",
-        //   "@google/generative-ai": "GoogleGenerativeAI",
-        // },
+        globals: {
+          "tesseract.js": "Tesseract",
+          "@google/generative-ai": "GoogleGenerativeAI",
+        },
       },
     },
   },
