@@ -39,7 +39,7 @@ export default function AI() {
         }))
       );
 
-      const response = await fetch("http://localhost:8000/ai", {
+      const response = await fetch("https://prepit-backend.vercel.app/ai", {
         method: "POST",
         body: formData,
       });
