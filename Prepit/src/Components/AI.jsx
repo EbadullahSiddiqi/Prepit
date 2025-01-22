@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import { GoogleGenerativeAI } from "@google/generative-ai";
-import Tesseract from "tesseract.js";
 
 export default function AI() {
   const [file, setFile] = useState(null);
@@ -25,35 +23,38 @@ export default function AI() {
 
     try {
       const formData = new FormData();
-      formData.append('file', file, file.name);
+      formData.append("file", file, file.name);
 
-      console.log('File details:', {
+      console.log("File details:", {
         name: file.name,
         type: file.type,
-        size: file.size
+        size: file.size,
       });
-      
-      console.log('FormData entries:', [...formData.entries()].map(entry => ({
-        fieldName: entry[0],
-        fileName: entry[1].name
-      })));
 
-      const response = await fetch('http://localhost:8000/ai', {
-        method: 'POST',
+      console.log(
+        "FormData entries:",
+        [...formData.entries()].map((entry) => ({
+          fieldName: entry[0],
+          fileName: entry[1].name,
+        }))
+      );
+
+      const response = await fetch("http://localhost:8000/ai", {
+        method: "POST",
         body: formData,
       });
 
-      console.log('Response status:', response.status);
+      console.log("Response status:", response.status);
       const responseText = await response.text();
-      console.log('Raw response:', responseText);
+      console.log("Raw response:", responseText);
 
       if (!response.ok) {
         let errorMessage;
         try {
           const errorData = JSON.parse(responseText);
-          errorMessage = errorData.error || 'Server responded with an error';
+          errorMessage = errorData.error || "Server responded with an error";
         } catch {
-          errorMessage = responseText || 'Server responded with an error';
+          errorMessage = responseText || "Server responded with an error";
         }
         throw new Error(errorMessage);
       }
