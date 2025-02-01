@@ -11,23 +11,49 @@ export async function POST(req) {
       return NextResponse.json({ error: "No text provided." }, { status: 400 });
     }
 
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
-    // Generate questions based on the extracted text
+    // Enhanced prompt with detailed instructions
     const prompt = `
-      You are a helpful AI tutor. Based on the following study notes, generate a list of 5 questions 
-      along with their correct answers in valid JSON format.
+      You are an expert educational content creator specializing in creating assessment questions. 
+      Your task is to analyze the provided study notes and generate high-quality questions that:
+
+      1. Test different cognitive levels (using Bloom's Taxonomy):
+         - At least one knowledge/recall question
+         - At least one comprehension/understanding question
+         - At least one application/analysis question
+         - At least one higher-order thinking question (evaluation/synthesis)
+
+      2. Follow these question-writing principles:
+         - Use clear, unambiguous language
+         - Focus on important concepts rather than trivial details
+         - Avoid leading questions or obvious answers
+         - Include scenario-based questions where appropriate
+         - Ensure questions are directly related to the core content
+         - Make answers comprehensive but concise
+
+      3. Question types to include:
+         - Conceptual understanding questions
+         - Problem-solving questions
+         - Critical thinking questions
+         - Real-world application questions
+         - Relationship/comparison questions
 
       Study Notes:
       "${text}"
 
-      Strictly format the output as JSON only, without any extra text or formatting:
+      Generate exactly 5 questions with their detailed answers in the following JSON format only.
+      Each answer should be thorough enough to serve as a learning tool.
+      Do not include any explanatory text, markdown, or additional formatting.
+      Strictly return only valid JSON in this exact structure:
+
       [
-        { "question": "Question 1?", "answer": "Answer 1" },
-        { "question": "Question 2?", "answer": "Answer 2" },
-        { "question": "Question 3?", "answer": "Answer 3" },
-        { "question": "Question 4?", "answer": "Answer 4" },
-        { "question": "Question 5?", "answer": "Answer 5" }
+        {
+          "question": "Clear, specific question text ending with a question mark?",
+          "answer": "Comprehensive, accurate answer that explains the reasoning",
+          "type": "One of: Knowledge, Comprehension, Application, Analysis, Evaluation, or Synthesis",
+          "difficulty": "One of: Basic, Intermediate, or Advanced"
+        }
       ]
     `;
 
@@ -35,13 +61,32 @@ export async function POST(req) {
     const response = await result.response;
     let responseText = response.text();
 
-    // Cleanup: Remove Markdown formatting (```json ... ```)
+    // Enhanced cleanup
     responseText = responseText.replace(/```json|```/g, "").trim();
 
-    // Parse the cleaned-up response
-    const questions = JSON.parse(responseText);
+    // Validate JSON structure
+    try {
+      const questions = JSON.parse(responseText);
 
-    return NextResponse.json({ questions }, { status: 200 });
+      // Validate required fields and format
+      if (
+        !Array.isArray(questions) ||
+        questions.length !== 5 ||
+        !questions.every(
+          (q) => q.question && q.answer && q.type && q.difficulty
+        )
+      ) {
+        throw new Error("Invalid response format");
+      }
+
+      return NextResponse.json({ questions }, { status: 200 });
+    } catch (jsonError) {
+      console.error("Error parsing AI response:", jsonError);
+      return NextResponse.json(
+        { error: "Invalid response format from AI. Please try again." },
+        { status: 500 }
+      );
+    }
   } catch (error) {
     console.error("Error generating questions:", error);
     return NextResponse.json(
