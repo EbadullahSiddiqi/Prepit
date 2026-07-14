@@ -35,7 +35,7 @@ export default function Home() {
             <div className="relative h-[400px]">
               <Image
                 src={hero}
-                alt="Student studying"
+                alt="Students studying"
                 fill
                 className="object-contain"
                 priority
